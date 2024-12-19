@@ -71,6 +71,15 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""64baad9c-6dc7-4af2-a766-03383ce0f745"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -238,6 +247,17 @@ public partial class @Controles: IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37c88301-8b36-45e0-b644-8b946cc2c803"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -251,6 +271,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         m_Movement_Giro = m_Movement.FindAction("Giro", throwIfNotFound: true);
         m_Movement_Freno = m_Movement.FindAction("Freno", throwIfNotFound: true);
         m_Movement_Dash = m_Movement.FindAction("Dash", throwIfNotFound: true);
+        m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +338,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Giro;
     private readonly InputAction m_Movement_Freno;
     private readonly InputAction m_Movement_Dash;
+    private readonly InputAction m_Movement_Jump;
     public struct MovementActions
     {
         private @Controles m_Wrapper;
@@ -326,6 +348,7 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         public InputAction @Giro => m_Wrapper.m_Movement_Giro;
         public InputAction @Freno => m_Wrapper.m_Movement_Freno;
         public InputAction @Dash => m_Wrapper.m_Movement_Dash;
+        public InputAction @Jump => m_Wrapper.m_Movement_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -350,6 +373,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
         }
 
         private void UnregisterCallbacks(IMovementActions instance)
@@ -369,6 +395,9 @@ public partial class @Controles: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
         }
 
         public void RemoveCallbacks(IMovementActions instance)
@@ -393,5 +422,6 @@ public partial class @Controles: IInputActionCollection2, IDisposable
         void OnGiro(InputAction.CallbackContext context);
         void OnFreno(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

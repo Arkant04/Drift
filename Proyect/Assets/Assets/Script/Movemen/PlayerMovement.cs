@@ -51,15 +51,18 @@ public class PlayerMovement : MonoBehaviour
     Controles controls;
 
     [Header("Dash")]
-    bool Dash;
-    bool dashing;
     [SerializeField] float dashForce;
     [SerializeField] float dashRotation;
     [SerializeField] float dashCooldownTime;
+    bool Dash;
+    bool dashing;
 
     [Header("Gravity")]
-    bool isOnground;
     [SerializeField] float gravityScale;
+    bool isOnground;
+
+    [Header("Jump Abilitie")]
+    [SerializeField] float jumpForce;
 
     
     
@@ -76,7 +79,8 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         passTimeScore = startScore;
         canvasScore.SetActive(false);
-        
+        GameEvents.PlayerWantsToUseDash.AddListener(dashIsUsed);
+        //GameEvents.PlayerWantsToJump.AddListener(jumpIsUsed);
     }
 
 
@@ -264,18 +268,20 @@ public class PlayerMovement : MonoBehaviour
                 //GameObject PlayerChild = GameObject.Find("GameObject");
                 //PlayerChild.transform.rotation = Quaternion.Euler(0, 0, -dashRotation);
                 dashParticle.Play();
-                rb.velocity = new Vector3(transform.forward.x * dashForce, 
-                    0, 
-                    transform.forward.z * dashForce);
+                
                 //Dash = false;
                 //StartCoroutine(dashRotationVisual());
+
+                //rb.velocity = new Vector3(transform.forward.x * dashForce, 
+                //    0, 
+                //    transform.forward.z * dashForce);
             }
            
             else if (controls.Movement.Dash.WasReleasedThisFrame() == false)
             {
                 new WaitForSeconds(0.8f);
                 dashParticle.Stop();
-                print("djada");
+               // print("djada");
             }
             
 
@@ -315,16 +321,13 @@ public class PlayerMovement : MonoBehaviour
                 //////////Antiguo///////////////
                 //transform.Rotate(dashVisualDR);
                 //Vector3 ForceToApply = transform.forward * dashForce;
-                dashParticle.Play();
-                rb.velocity = new Vector3(transform.forward.x * dashForce, 
-                    0, 
-                    transform.forward.z * dashForce);
                 //StartCoroutine(dashCooldownIZ());
 
                 ////////Reciente//////////////
                 //GameObject PlayerChild = GameObject.Find("GameObject");
                 //PlayerChild.transform.rotation = Quaternion.Euler(0, 0, dashRotation);
 
+                dashParticle.Play();
                 
                 //rb.velocity = new Vector3(transform.forward.x * dashForce, 
                 //    0, 
@@ -332,13 +335,16 @@ public class PlayerMovement : MonoBehaviour
                 //StartCoroutine(dashRotationVisual());
                 //Dash = false;
                 
+                //rb.velocity = new Vector3(transform.forward.x * dashForce, 
+                //    0, 
+                //    transform.forward.z * dashForce);
             }
             
             else if(controls.Movement.Dash.WasReleasedThisFrame() == false)
             {
                 new WaitForSeconds(0.8f);
                 dashParticle.Stop();
-                print("dadda");
+               // print("dadda");
             }
             
 
@@ -477,6 +483,21 @@ public class PlayerMovement : MonoBehaviour
 
         yield return null;
         //transform.Rotate(dashVisualIZ);
+    }
+
+
+    void dashIsUsed()
+    {
+        //Dash = true;
+        //dashParticle.Play();
+        rb.velocity = new Vector3(transform.forward.x * dashForce,
+            0,
+            transform.forward.z * dashForce);
+    }
+
+    void jumpIsUsed()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, transform.forward.y * jumpForce, rb.velocity.z);
     }
         //dashing = true;
         //yield return new WaitForSeconds(0.3f);
